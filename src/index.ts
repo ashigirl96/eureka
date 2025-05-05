@@ -1,18 +1,32 @@
-import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
+#!/usr/bin/env node
 import { z } from "zod";
+import { McpServer, ResourceTemplate } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 
 // Create an MCP server
 const server = new McpServer({
   name: "Eureka",
   version: "0.1.0",
   description: "開発を効率化するためのツール群"
+}, {
+  capabilities: {
+    tools: {},
+    prompts: {
+      'pr-create': {
+        description: "Pull Requestを作成するためのプロンプト",
+        parameters: {
+          baseRef: z.string().describe("Pull Requestのベースブランチ（例: main または master）")
+        }
+      }
+    },
+  },
+  instructions: "eurekaは開発を効率化するためのツール群です。"
 });
 
 // PR作成用のプロンプト
 server.prompt(
   "pr-create",
-  { 
+  {
     baseRef: z.string().describe("Pull Requestのベースブランチ（例: main または master）")
   },
   ({ baseRef }) => ({

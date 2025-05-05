@@ -11,13 +11,14 @@
     "build"
   ],
   "scripts": {
-    "build": "tsc && node -e \"require('fs').chmodSync('build/index.js', '755')\"",
+    "build": "tsc && node --input-type=module -e \"import('fs').then(fs => fs.chmodSync('build/index.js', '755'))\"",
     "prepare": "npm run build",
     "watch": "tsc --watch",
     "inspector": "npx @modelcontextprotocol/inspector build/index.js"
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "0.6.0"
+    "@modelcontextprotocol/sdk": "0.6.0",
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@types/node": "^20.11.24",

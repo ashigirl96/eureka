@@ -1,9 +1,5 @@
 #!/usr/bin/env node
-import { z } from "zod"
-import {
-  McpServer,
-  ResourceTemplate,
-} from "@modelcontextprotocol/sdk/server/mcp.js"
+import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js"
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
 import { addPullRequestSave } from "./tools/pr-save.js"
 
@@ -18,13 +14,19 @@ const server = new McpServer(
     capabilities: {
       tools: {},
       prompts: {},
+      completions: {},
+      resources: {
+        subscribe: true,
+        listChanged: true,
+      },
     },
     instructions: "eurekaは開発を効率化するためのツール群です。",
   },
 )
 
-// PR作成用のプロンプト
-addPullRequestSave(server)
+server
+  // PR作成用のプロンプト
+  .addPullRequestSave(server)
 
 // Start receiving messages on stdin and sending messages on stdout
 const transport = new StdioServerTransport()

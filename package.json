@@ -9,8 +9,8 @@
   },
   "files": ["build"],
   "scripts": {
-    "build": "bun format && tsc && node --input-type=module -e \"import * as fs from 'fs'; fs.chmodSync('build/index.js', '755')\"",
-    "prepare": "npm run build",
+    "b": "bun format && tsc && node --input-type=module -e \"import * as fs from 'fs'; fs.chmodSync('build/index.js', '755')\"",
+    "prepare": "npm run b",
     "watch": "tsc --watch",
     "inspector": "npx @modelcontextprotocol/inspector build/index.js",
     "format": "biome format --write ."

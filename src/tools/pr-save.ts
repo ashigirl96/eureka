@@ -1,25 +1,49 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js"
 import { z } from "zod"
 
-export function addPullRequestSave(server: McpServer) {
-  return server.prompt(
+export function addPullRequestSaveTool(server: McpServer) {
+  return server.tool(
     "pr-save",
     {
       baseRef: z
         .string()
         .describe("Pull Requestのベースブランチ（例: main または master）"),
     },
-    ({ baseRef }) => {
-      return {
-        description: "Pull Requestを作成または更新してください",
-        messages: [
-          {
-            role: "user",
+    async ({ baseRef }) => {
+      const result = await (async () => {
+        try {
+          // まずは通常通りにcreateMessageを試みる
+          return await server.server.createMessage({
+            systemPrompt: "あなたはドラえもんです",
+            messages: [
+              {
+                role: "user",
+                content: {
+                  type: "text",
+                  text: "こんにちは！",
+                },
+              },
+            ],
+            maxTokens: 10_000,
+          })
+        } catch (error) {
+          console.error("Error calling createMessage:", error)
+          // フォールバックとして固定の応答を用意
+          return {
             content: {
               type: "text",
-              text: `以下の手順に従ってPull Requestを作成または更新してください。
+              text: "こんにちは！ぼくドラえもんだよ！",
+            },
+          }
+        }
+      })()
 
-0. 最初は必ず元気よく「PULL REQUEST作成します！」と言って下さい
+      return {
+        content: [
+          {
+            type: "text",
+            text: `以下の手順に従ってPull Requestを作成または更新してください。
+0. 最初は必ず元気よく「${result.content.text}」と言って下さい
 1. <if コミットしていないものがある>
     <command>git add . && git commit -m "{{コミット文}}"</command> # 変更をコミット
    </if コミットしていないものがある>
@@ -32,9 +56,7 @@ export function addPullRequestSave(server: McpServer) {
     <if pull requestが作成されている>
     <command>gh pr edit {{PR番号}} --title "{{PRタイトル}}" --body $'{{PRテンプレートを1行に変換}}'</command> # Pull Requestを更新
    </if pull requestが作成されている>
-6. <command>gh pr view --web</command> # Pull RequestをWebブラウザで表示
-    `,
-            },
+6. <command>gh pr view --web</command> # Pull RequestをWebブラウザで表示`,
           },
         ],
       }

@@ -1,13 +1,9 @@
 #!/usr/bin/env node
-import { completable } from "@modelcontextprotocol/sdk/server/completable.js"
-import {
-  McpServer,
-  ResourceTemplate,
-} from "@modelcontextprotocol/sdk/server/mcp.js"
+import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js"
 
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
-import { z } from "zod"
 import { addPullRequestSave } from "./tools/pr-save.js"
+import { addMcpTools } from "./tools/mcp/index.js"
 
 // Create an MCP server
 const server = new McpServer(
@@ -21,6 +17,9 @@ const server = new McpServer(
       tools: {},
       prompts: {},
       completions: {},
+      sampling: {
+        createMessage: true,
+      },
       resources: {
         subscribe: true,
         listChanged: true,
@@ -31,6 +30,7 @@ const server = new McpServer(
 )
 
 addPullRequestSave(server)
+addMcpTools(server)
 
 // // Simple tool with parameters
 // server.tool(

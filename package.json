@@ -7,20 +7,20 @@
   "bin": {
     "eureka": "./build/index.js"
   },
-  "files": [
-    "build"
-  ],
+  "files": ["build"],
   "scripts": {
     "build": "tsc && node --input-type=module -e \"import * as fs from 'fs'; fs.chmodSync('build/index.js', '755')\"",
     "prepare": "npm run build",
     "watch": "tsc --watch",
-    "inspector": "npx @modelcontextprotocol/inspector build/index.js"
+    "inspector": "npx @modelcontextprotocol/inspector build/index.js",
+    "format": "biome format --write ."
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "1.11.0",
     "zod": "^3.22.4"
   },
   "devDependencies": {
+    "@biomejs/biome": "1.9.4",
     "@types/node": "^20.11.24",
     "typescript": "^5.3.3"
   }

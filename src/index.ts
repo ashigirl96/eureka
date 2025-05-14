@@ -1,6 +1,12 @@
 #!/usr/bin/env node
-import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js"
+import { completable } from "@modelcontextprotocol/sdk/server/completable.js"
+import {
+  McpServer,
+  ResourceTemplate,
+} from "@modelcontextprotocol/sdk/server/mcp.js"
+
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
+import { z } from "zod"
 import { addPullRequestSave } from "./tools/pr-save.js"
 
 // Create an MCP server
@@ -24,9 +30,48 @@ const server = new McpServer(
   },
 )
 
-server
-  // PR作成用のプロンプト
-  .addPullRequestSave(server)
+addPullRequestSave(server)
+
+// // Simple tool with parameters
+// server.tool(
+//   "calculate-bmi",
+//   {
+//     weightKg: z.number(),
+//     heightM: z.number(),
+//   },
+//   async (
+//     { weightKg, heightM },
+//     {
+//       sendNotification,
+//       _meta,
+//       authInfo,
+//       sendRequest,
+//       requestId,
+//       sessionId,
+//       signal,
+//     },
+//   ) => ({
+//     content: [
+//       {
+//         type: "text",
+//         text: String(weightKg / (heightM * heightM)),
+//       },
+//     ],
+//   }),
+// )
+//
+// server.resource(
+//   "user-profile",
+//   new ResourceTemplate("users://{userId}/profile", { list: undefined }),
+//   async (uri, { userId }) => ({
+//     contents: [
+//       {
+//         uri: uri.href,
+//         text: `Profile data for user ${userId}`,
+//       },
+//     ],
+//   }),
+// )
 
 // Start receiving messages on stdin and sending messages on stdout
 const transport = new StdioServerTransport()

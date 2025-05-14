@@ -2,7 +2,7 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js"
 
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
-import { addPullRequestSave, addPullRequestSaveTool } from "./tools/pr-save.js"
+import { addPullRequestSaveTool } from "./tools/pr-save.js"
 
 // Create an MCP server
 const server = new McpServer(
@@ -28,8 +28,7 @@ const server = new McpServer(
   },
 )
 
-addPullRequestSave(server)
-void addPullRequestSaveTool(server)
+addPullRequestSaveTool(server)
 
 // // Simple tool with parameters
 // server.tool(

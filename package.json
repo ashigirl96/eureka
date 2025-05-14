@@ -9,14 +9,14 @@
   },
   "files": ["build"],
   "scripts": {
-    "build": "tsc && node --input-type=module -e \"import * as fs from 'fs'; fs.chmodSync('build/index.js', '755')\"",
+    "build": "bun format && tsc && node --input-type=module -e \"import * as fs from 'fs'; fs.chmodSync('build/index.js', '755')\"",
     "prepare": "npm run build",
     "watch": "tsc --watch",
     "inspector": "npx @modelcontextprotocol/inspector build/index.js",
     "format": "biome format --write ."
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "1.11.0",
+    "@modelcontextprotocol/sdk": "1.11.1",
     "zod": "^3.22.4"
   },
   "devDependencies": {
